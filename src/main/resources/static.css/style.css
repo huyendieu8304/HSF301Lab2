@@ -1,0 +1,92 @@
+.table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-header {
+    display: table-header-group;
+    background-color: #f2f2f2;
+}
+
+.table-body {
+    display: table-row-group;
+}
+
+.table-row {
+    display: table-row;
+}
+
+.table-cell {
+    display: table-cell;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/*.table-cell:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.table-cell:nth-child(odd) {
+    background-color: #f9f9f9;
+} */
+.submit-btn {
+    background-color: #4CAF50; /* Màu nền xanh lá */
+    font-size: medium;
+    color: white; /* Màu chữ trắng */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}
+.styled-div {
+    width: 300px;                /* Chiều rộng của thẻ */
+    height: 200px;               /* Chiều cao của thẻ */
+    background-color: #f0f0f0;   /* Màu nền của thẻ */
+    border: 2px solid #333;      /* Viền của thẻ */
+    border-radius: 10px;         /* Bo tròn các góc viền */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);  /* Đổ bóng cho thẻ */
+    margin: 20px auto;           /* Căn giữa thẻ và thêm khoảng cách ngoài */
+    padding: 20px;               /* Khoảng cách giữa nội dung và viền */
+    text-align: center;           /* Căn giữa văn bản */
+    font-family: Arial, sans-serif; /* Font chữ */
+    font-size: 18px;             /* Kích thước chữ */
+    color: #333;                 /* Màu chữ */
+    transition: transform 0.3s ease; /* Hiệu ứng chuyển đổi */
+}
+.styled-div-filter {
+    width: 300px;                /* Chiều rộng của thẻ */
+    height: 100px;               /* Chiều cao của thẻ */
+    background-color: #f0f0f0;   /* Màu nền của thẻ */
+    border: 2px solid #333;      /* Viền của thẻ */
+    border-radius: 10px;         /* Bo tròn các góc viền */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);  /* Đổ bóng cho thẻ */
+    margin: 20px auto;           /* Căn giữa thẻ và thêm khoảng cách ngoài */
+    padding: 20px;               /* Khoảng cách giữa nội dung và viền */
+    text-align: center;           /* Căn giữa văn bản */
+    font-family: Arial, sans-serif; /* Font chữ */
+    font-size: 18px;             /* Kích thước chữ */
+    color: #333;                 /* Màu chữ */
+    transition: transform 0.3s ease; /* Hiệu ứng chuyển đổi */
+}
+.styled-div:hover {
+    transform: scale(1.05); /* Phóng to nhẹ khi hover */
+}
+.style-div-body {
+    width: 100%;                /* Chiều rộng của thẻ */
+    height: 100%;               /* Chiều cao của thẻ */
+    background-color: #f0f0f0;   /* Màu nền của thẻ */
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+h1 {
+    color: #4CAF50;
+}
