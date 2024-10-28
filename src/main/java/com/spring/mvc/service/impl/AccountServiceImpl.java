@@ -32,6 +32,16 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    @Override
+    public AccountDto getAccountByEmail(String email) {
+        Account account = accountDAO.getAccountByEmail(email);
+        System.out.println(account.getEmail());
+
+        return AccountDto.builder()
+                .id(account.getId())
+                .email(account.getEmail())
+                .build();
+    }
 
 
 }

@@ -71,6 +71,14 @@ public class AgentDAOImpl implements AgentDAO {
     }
 
     @Override
+    public Agent delete(Integer agentId) {
+        Session session = sessionFactory.getCurrentSession();
+        Agent deletedAgent = session.get(Agent.class, agentId);
+        session.remove(deletedAgent);
+        return deletedAgent;
+    }
+
+    @Override
     public List<Agent> searchAgent(String email, String status, String name, int pageSize, int pageNo) {
         Session session = sessionFactory.getCurrentSession();
         try {

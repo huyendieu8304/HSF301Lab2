@@ -3,140 +3,209 @@
 <head>
     <meta charset="UTF-8">
     <title>Agent List</title>
-<!--    <link rel="stylesheet" th:href="@{/css/style.css}"/>-->
+    <!--    <link rel="stylesheet" th:href="@{/css/style.css}"/>-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
+    <style>
+        html, body {
+            height: 100%; /* Đảm bảo chiều cao 100% cho html và body */
+            margin: 0; /* Xóa margin mặc định */
+        }
+
+        .wrapper {
+            display: flex; /* Sử dụng flexbox */
+            flex-direction: column; /* Sắp xếp theo chiều dọc */
+            min-height: 100vh; /* Chiều cao tối thiểu 100% chiều cao cửa sổ */
+        }
+
+        .content {
+            flex: 1; /* Phần này sẽ mở rộng để chiếm không gian còn lại */
+        }
+
+        .footer {
+            /* Các thuộc tính của footer có thể được giữ nguyên */
+        }
+    </style>
 
 </head>
 <body>
-<div class="container-md">
-    <h1 class="text-center m-3 fw-bold">Agent List</h1>
 
-    <form id="searchForm" th:action="@{/agent-list}" method="get">
-<!--        <input type="hidden" name="currentPage" value="">-->
-        <input type="hidden" name="targetPage" id="targetPage" th:value="${currentPage}" />
+<div class="wrapper">
 
-        <div class="row mx-5">
-            <div class="col-8">
-                <div class="row py-1">
-                    <label class="col-2 col-form-label" for="email">Email: </label>
-                    <div class="col-9">
-                        <input class="form-control" type="text" name="email" id="email" th:value="${email}"/>
-                    </div>
+    <div class="container-fluid header p-5 bg-primary text-light">
+        <div class="row ">
+            <div class="col-sm-2">
+                <img th:src="@{/images/fu_logo.png}" alt="Logo" style="width: 50px; height: 50px;">
+            </div>
+
+            <div class="col-sm-5">
+                <p class="h3 ">Agent Management</p>
+            </div>
+            <div class="col-sm-4 row">
+                <div class="row">
+            <span class="greeting">Welcome:
+                <span th:text=" ${account.email}"
+                      style="font-weight: bold; font-style: italic;"></span>
+            </span>
                 </div>
-                <div class="row py-1">
-                    <label class="col-2 col-form-label" for="status">Status: </label>
-                    <div class="col-9">
-                        <select class="form-select" id="status" name="status">
-                            <option value="">All</option>
-                            <option th:each="stt : ${statuses}"
-                                    th:value="${stt}"
-                                    th:text="${stt}"
-                                    th:selected="${stt.equals(status)}">
-                            </option>
-                        </select>
-                    </div>
+                <div class="row">
+                    <span class="date">Date: <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"></span></span>
                 </div>
+            </div>
+            <div class="col-sm-1">
+                <a th:href="@{/logout}" class="btn btn-default btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class="container-md content">
+        <h1 class="text-center m-3 fw-bold">Agent List</h1>
 
-                <div class="row py-1">
-                    <label class="col-2 col-form-label" for="name">Name: </label>
-                    <div class="col-9">
-                        <input class="form-control" type="text" name="name" id="name" th:value="${name}"/>
+        <form id="searchForm" th:action="@{/agent-list}" method="get">
+            <!--        <input type="hidden" name="currentPage" value="">-->
+            <input type="hidden" name="targetPage" id="targetPage" th:value="${currentPage}"/>
+
+            <div class="row mx-5">
+                <div class="col-8">
+                    <div class="row py-1">
+                        <label class="col-2 col-form-label" for="email">Email: </label>
+                        <div class="col-9">
+                            <input class="form-control" type="text" name="email" id="email" th:value="${email}"/>
+                        </div>
                     </div>
-                </div>
-                <div class="row py-1">
-                    <label class="col-2 col-form-label" for="pageSize">Display: </label>
-                    <div class="col-5">
-                        <div>
-                        <input class="form-control" type="number" name="pageSize" id="pageSize"
-                               placeholder="agents/page" th:value="${pageSize}"/>
-                        <span>agents/page </span>
+                    <div class="row py-1">
+                        <label class="col-2 col-form-label" for="status">Status: </label>
+                        <div class="col-9">
+                            <select class="form-select" id="status" name="status">
+                                <option th:value="${status}" th:text="${status}"></option>
+                                <option value="">All</option>
+                                <option th:each="stt : ${statuses}"
+                                        th:value="${stt}"
+                                        th:text="${stt}">
+                                    <!--                                    th:selected="${stt == status}"-->
+                                </option>
+                            </select>
+                        </div>
+                    </div>
 
+                    <div class="row py-1">
+                        <label class="col-2 col-form-label" for="name">Name: </label>
+                        <div class="col-9">
+                            <input class="form-control" type="text" name="name" id="name" th:value="${name}"/>
+                        </div>
+                    </div>
+                    <div class="row py-1">
+                        <label class="col-2 col-form-label" for="pageSize">Display: </label>
+                        <div class="col-5">
+                            <div>
+                                <input class="form-control" type="number" name="pageSize" id="pageSize"
+                                       placeholder="agents/page" th:value="${pageSize}"/>
+                                <span>agents/page </span>
+
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
 
-            <div class="col-3 ">
+                <div class="col-3 ">
                     <a th:href="@{/create-agent}">
-                <div class="row btn btn-primary" style=" margin-bottom: 20px;">
-                        Create Agent
-                </div>
+                        <div class="row btn btn-primary" style=" margin-bottom: 20px;">
+                            Create Agent
+                        </div>
                     </a>
-                <div class="row" style="margin-top: 20px; margin-bottom: 40px;">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </div>
-                <div class="row">
+                    <div class="row" style="margin-top: 20px; margin-bottom: 40px;">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                    <div class="row">
 
-<!--                    <a th:if="${currentPage != 1}"-->
-<!--                       th:href="@{/agent-list(pageSize=${paging.pageSize}, targetPage=${paging.currentPage - 1}, email=${email}, status = ${status}, name=${name})}">-->
+                        <!--                    <a th:if="${currentPage != 1}"-->
+                        <!--                       th:href="@{/agent-list(pageSize=${paging.pageSize}, targetPage=${paging.currentPage - 1}, email=${email}, status = ${status}, name=${name})}">-->
                         <button class="col-6 btn btn-primary" id="previousButton"
                                 th:attr="disabled=${currentPage == 1}">
                             Previous
                         </button>
-<!--                    </a>-->
-<!--                    <a th:if="${currentPage != totalPage}"-->
-<!--                       th:href="@{/agent-list(pageSize=${paging.pageSize}, targetPage=${paging.currentPage + 1}, email=${email}, status = ${status}, name=${name})}">-->
+                        <!--                    </a>-->
+                        <!--                    <a th:if="${currentPage != totalPage}"-->
+                        <!--                       th:href="@{/agent-list(pageSize=${paging.pageSize}, targetPage=${paging.currentPage + 1}, email=${email}, status = ${status}, name=${name})}">-->
                         <button class="col-6 btn btn-primary" id="nextButton"
                                 th:attr="disabled=${currentPage == totalPage}">
                             Next
                         </button>
-<!--                    </a>-->
+                        <!--                    </a>-->
+                    </div>
                 </div>
+
             </div>
+        </form>
 
+        <table class="table mt-5" th:object="${agentList}">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Email</th>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">Status</th>
+                <th scope="col">Register date</th>
+                <th scope="col">Ballance</th>
+                <th scope="col">Option</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="agent, agentNo : ${agentList}">
+                <th scope="row" th:text="${agentNo.index + 1}">1</th>
+                <td th:text="${agent.getEmail()}">email</td>
+                <td th:text="${agent.getName()}">name</td>
+                <td th:text="${agent.getAddress()}">address</td>
+                <td th:text="${agent.getStatus()}">status</td>
+                <td th:text="${agent.getRegisterDate()}">register date</td>
+                <td th:text="${agent.getAccountBalance()}">Ballance</td>
+                <td>
+                    <a th:href="@{/agent-detail/{agentId}(agentId=${agent.id})}">
+                        <i class="bi bi-eye-fill"></i>
+                    </a>
+
+                    <a th:href="@{/delete-agent/{agentId}(agentId=${agent.id})}" onclick="return confirmDelete();">
+                        <i class="bi bi-trash3"></i>
+                    </a>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+        <div>Display page <span th:text="${currentPage}"></span> over total <span th:text="${totalPage}"></span></div>
+    </div>
+
+    <div class="footer p-5 bg-primary text-light" style="margin-top: auto">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="mb-2">@2015, Copy right to FPT University Hanoi</div>
+                <div class="mb-2">Address: HoaLac, ThachThat, HaNoi</div>
+                <div>Liên hệ: <a class="text-light" href="mailto:daihocfpt@fpt.edu.vn">daihocfpt@fpt.edu.vn</a></div>
+            </div>
+            <div class="col-sm-4 d-flex align-items-center justify-content-end">
+                <a class="text-light me-3" href="https://daihoc.fpt.edu.vn/" target="_blank">Introduction</a> |
+                <a class="text-light me-3" href="https://daihoc.fpt.edu.vn/" target="_blank">Support</a> |
+                <a class="text-light" href="https://daihoc.fpt.edu.vn/" target="_blank">Job</a>
+            </div>
         </div>
-    </form>
-
-    <table class="table mt-5" th:object="${agentList}">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Email</th>
-            <th scope="col">Name</th>
-            <th scope="col">Address</th>
-            <th scope="col">Status</th>
-            <th scope="col">Register date</th>
-            <th scope="col">Ballance</th>
-            <th scope="col">Option</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <tr th:each="agent, agentNo : ${agentList}">
-            <th scope="row" th:text="${agentNo.index + 1}">1</th>
-            <td th:text="${agent.getEmail()}">email</td>
-            <td th:text="${agent.getName()}">name</td>
-            <td th:text="${agent.getAddress()}">address</td>
-            <td th:text="${agent.getStatus()}">status</td>
-            <td th:text="${agent.getRegisterDate()}">register date</td>
-            <td th:text="${agent.getAccountBalance()}">Ballance</td>
-            <td>
-                <a th:href="@{/agent-detail/{agentId}(agentId=${agent.id})}">
-                    <i class="bi bi-eye-fill"></i>
-                </a>
-
-                <!--                <a th:ref="@{/delete-agent/{agentId}(agentId=${agent.getId()})}">-->
-                <!--                    <i class="bi bi-eye-fill"></i>-->
-                <!--                </a>-->
-                <i class="bi bi-trash3"></i>
-            </td>
-        </tr>
-
-        </tbody>
-    </table>
+    </div>
 
 </div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
 <script>
+
+    function confirmDelete() {
+        return confirm("Are you sure to delete the agent?");
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("searchForm");
         const targetPageInput = document.getElementById("targetPage");
@@ -159,6 +228,7 @@
         });
 
     });
+
 </script>
 </body>
 </html>

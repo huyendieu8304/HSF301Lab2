@@ -4,6 +4,7 @@ import com.spring.mvc.dto.AgentDto;
 import com.spring.mvc.entity.Paging;
 import com.spring.mvc.enumeration.EAgentStatus;
 import com.spring.mvc.service.AgentService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +29,14 @@ public class AgentController {
     }
 
     @GetMapping("/create-agent")
-    public String createAgent(Model model) {
+    public String createAgent(Model model, HttpSession session) {
+
+        Object account = session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("account", account);
+
         model.addAttribute("agentForm", new AgentDto());
         model.addAttribute("statuses", Arrays.asList(EAgentStatus.values()));
         return "create-agent";
@@ -36,7 +44,14 @@ public class AgentController {
 
     @PostMapping("/create-agent")
     public String createAgent(@Valid @ModelAttribute("agentForm") AgentDto agentDto,
-                              BindingResult bindingResult, Model model) {
+                              BindingResult bindingResult, Model model, HttpSession session) {
+
+        Object account = session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("account", account);
+
         model.addAttribute("statuses", Arrays.asList(EAgentStatus.values()));
         try {
             if (bindingResult.hasErrors()) {
@@ -66,7 +81,15 @@ public class AgentController {
     }
 
     @GetMapping("/agent-detail/{agentId}")
-    public String getAgentDetail(@PathVariable("agentId") Integer id, Model model) {
+    public String getAgentDetail(@PathVariable("agentId") Integer id, Model model, HttpSession session) {
+
+        Object account = session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("account", account);
+
+
         model.addAttribute("statuses", Arrays.asList(EAgentStatus.values()));
         model.addAttribute("agentForm", agentService.getAgentById(id));
         return "agent-detail";
@@ -74,11 +97,17 @@ public class AgentController {
 
     @PostMapping("/update-agent")
     public String updateAgent(@Valid @ModelAttribute("agentForm") AgentDto agentDto,
-                              BindingResult bindingResult, Model model) {
+                              BindingResult bindingResult, Model model, HttpSession session) {
+
+
+        Object account = session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("account", account);
+
         model.addAttribute("statuses", Arrays.asList(EAgentStatus.values()));
 
-        System.out.println("agent name: " + agentDto.getName());
-        System.out.println("agent email: " + agentDto.getEmail());
         try {
             if (bindingResult.hasErrors()) {
                 model.addAttribute("message", "Has some input errors");
@@ -116,16 +145,13 @@ public class AgentController {
                         @RequestParam("email") Optional<String> email,
                         @RequestParam("status") Optional<String> status,
                         @RequestParam("name") Optional<String> name,
-                                Model model) {
+                                Model model, HttpSession session) {
 
-        System.out.println("targetPage: " + targetPage);
-        System.out.println("pageSize: " + pageSize);
-
-        System.out.println("email: " + email);
-        System.out.println("status: " + status);
-        System.out.println("name: " + name);
-
-
+        Object account = session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("account", account);
 
         int targetPageValue = targetPage.orElse(1);
         int pageSizeValue = pageSize.orElse(10); //default 10 row/page
@@ -133,33 +159,44 @@ public class AgentController {
         String statusValue = status.orElse(null);
         String nameValue = name.orElse(null);
 
-        System.out.println("targetPage: " + targetPageValue);
-        System.out.println("pageSize: " + pageSizeValue);
-
-        System.out.println("email: " + emailValue);
-        System.out.println("status: " + statusValue);
-        System.out.println("name: " + nameValue);
-
-
         List<AgentDto> agentDtoList =  agentService.searchAgent(emailValue, statusValue, nameValue, pageSizeValue, targetPageValue);
         model.addAttribute("agentList", agentDtoList);
-        for (AgentDto agentDto : agentDtoList) {
-            System.out.println(agentDto.toString());
-        }
 
         int totalPage = agentService.getTotalPage(emailValue, statusValue, nameValue, pageSizeValue, targetPageValue);
         model.addAttribute("totalPage", totalPage);
 
         //send the status of agent back to front end
         model.addAttribute("statuses", Arrays.asList(EAgentStatus.values()));
-        System.out.println(targetPageValue);
+
         model.addAttribute("currentPage", targetPageValue);
         model.addAttribute("pageSize", pageSizeValue );
         model.addAttribute("email", emailValue );
-        model.addAttribute("status", statusValue != null ? statusValue.toString() : null);
-//        model.addAttribute("status", statusValue );
+//        model.addAttribute("status", statusValue != null ? statusValue.toString() : null);
+        model.addAttribute("status", statusValue );
         model.addAttribute("name", nameValue );
 
         return "agent-list";
+    }
+
+    @GetMapping("/delete-agent/{agentId}")
+    public String deleteAgent(@PathVariable("agentId") Integer agentId, Model model, HttpSession session) {
+//        model.addAttribute("statuses", Arrays.asList(EAgentStatus.values()));
+
+//        model.addAttribute("agentForm", agentService.getAgentById(id));
+
+//        if (agentService.deleteAgentById(agentId)) {
+//            return "redirect:/agent-list";
+//        } else {
+//
+//        }
+        Object account = session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("account", account);
+
+        agentService.deleteAgentById(agentId);
+        return "redirect:/agent-list";
+
     }
 }

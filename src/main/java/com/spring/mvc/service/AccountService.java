@@ -4,4 +4,6 @@ import com.spring.mvc.dto.AccountDto;
 
 public interface AccountService {
     boolean verifyAccount(AccountDto accountDto);
+
+    AccountDto getAccountByEmail(String email);
 }

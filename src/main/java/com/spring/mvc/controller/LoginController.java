@@ -2,6 +2,7 @@ package com.spring.mvc.controller;
 
 import com.spring.mvc.dto.AccountDto;
 import com.spring.mvc.service.AccountService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class LoginController {
 
     @PostMapping({"/", "/login"})
     public String login(@Valid @ModelAttribute("accountForm") AccountDto accountDto,
-                        BindingResult bindingResult, Model model) {
+                        BindingResult bindingResult, Model model, HttpSession httpSession) {
         try {
             if (bindingResult.hasErrors()) {
                 model.addAttribute("message", "Has some input errors");
@@ -37,8 +38,10 @@ public class LoginController {
 
             boolean valid = accountService.verifyAccount(accountDto);
             if (valid) {
-                model.addAttribute("message", "Log in successful");
-//            return "redirect:/";
+                AccountDto account = accountService.getAccountByEmail(accountDto.getEmail());
+                httpSession.setAttribute("account", account);
+//                model.addAttribute("message", "Log in successful");
+            return "redirect:/agent-list";
             } else {
                 model.addAttribute("message", "Email or password is not valid");
             }

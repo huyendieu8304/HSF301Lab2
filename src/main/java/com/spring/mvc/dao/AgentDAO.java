@@ -12,6 +12,8 @@ public interface AgentDAO {
     Agent findByName(String name);
     Agent update(Agent agent);
 
+    Agent delete(Integer id);
+
     List<Agent> searchAgent(String email, String status, String name, int pageSize, int pageNo);
     Long countAgent(String email, String status, String name);
 }

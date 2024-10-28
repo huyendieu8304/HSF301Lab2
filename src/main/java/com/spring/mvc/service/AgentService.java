@@ -13,4 +13,6 @@ public interface AgentService {
 
     List<AgentDto> searchAgent(String email, String status, String name, int pageSize, int pageNo);
     int getTotalPage(String email, String status, String name, int pageSize, int pageNo);
+
+    boolean deleteAgentById(Integer id);
 }

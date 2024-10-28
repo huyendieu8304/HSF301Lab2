@@ -134,5 +134,13 @@ public class AgentServiceImpl implements AgentService {
         return (int) Math.ceil((double)numberOfAgents / pageSize);
     }
 
+    @Override
+    public boolean deleteAgentById(Integer id) {
+        if (agentDAO.delete(id) == null) {
+            return false;
+        }
+        return true;
+    }
+
 
 }
