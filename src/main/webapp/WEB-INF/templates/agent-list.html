@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Agent List</title>
+<!--    <link rel="stylesheet" th:href="@{/css/style.css}"/>-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+
+</head>
+<body>
+<div class="container-md">
+    <h1 class="text-center m-3 fw-bold">Agent List</h1>
+
+    <form id="searchForm" th:action="@{/agent-list}" method="get">
+<!--        <input type="hidden" name="currentPage" value="">-->
+        <input type="hidden" name="targetPage" id="targetPage" th:value="${currentPage}" />
+
+        <div class="row mx-5">
+            <div class="col-8">
+                <div class="row py-1">
+                    <label class="col-2 col-form-label" for="email">Email: </label>
+                    <div class="col-9">
+                        <input class="form-control" type="text" name="email" id="email" th:value="${email}"/>
+                    </div>
+                </div>
+                <div class="row py-1">
+                    <label class="col-2 col-form-label" for="status">Status: </label>
+                    <div class="col-9">
+                        <select class="form-select" id="status" name="status">
+                            <option value="">All</option>
+                            <option th:each="stt : ${statuses}"
+                                    th:value="${stt}"
+                                    th:text="${stt}"
+                                    th:selected="${stt.equals(status)}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row py-1">
+                    <label class="col-2 col-form-label" for="name">Name: </label>
+                    <div class="col-9">
+                        <input class="form-control" type="text" name="name" id="name" th:value="${name}"/>
+                    </div>
+                </div>
+                <div class="row py-1">
+                    <label class="col-2 col-form-label" for="pageSize">Display: </label>
+                    <div class="col-5">
+                        <div>
+                        <input class="form-control" type="number" name="pageSize" id="pageSize"
+                               placeholder="agents/page" th:value="${pageSize}"/>
+                        <span>agents/page </span>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-3 ">
+                    <a th:href="@{/create-agent}">
+                <div class="row btn btn-primary" style=" margin-bottom: 20px;">
+                        Create Agent
+                </div>
+                    </a>
+                <div class="row" style="margin-top: 20px; margin-bottom: 40px;">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+                <div class="row">
+
+<!--                    <a th:if="${currentPage != 1}"-->
+<!--                       th:href="@{/agent-list(pageSize=${paging.pageSize}, targetPage=${paging.currentPage - 1}, email=${email}, status = ${status}, name=${name})}">-->
+                        <button class="col-6 btn btn-primary" id="previousButton"
+                                th:attr="disabled=${currentPage == 1}">
+                            Previous
+                        </button>
+<!--                    </a>-->
+<!--                    <a th:if="${currentPage != totalPage}"-->
+<!--                       th:href="@{/agent-list(pageSize=${paging.pageSize}, targetPage=${paging.currentPage + 1}, email=${email}, status = ${status}, name=${name})}">-->
+                        <button class="col-6 btn btn-primary" id="nextButton"
+                                th:attr="disabled=${currentPage == totalPage}">
+                            Next
+                        </button>
+<!--                    </a>-->
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <table class="table mt-5" th:object="${agentList}">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Email</th>
+            <th scope="col">Name</th>
+            <th scope="col">Address</th>
+            <th scope="col">Status</th>
+            <th scope="col">Register date</th>
+            <th scope="col">Ballance</th>
+            <th scope="col">Option</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="agent, agentNo : ${agentList}">
+            <th scope="row" th:text="${agentNo.index + 1}">1</th>
+            <td th:text="${agent.getEmail()}">email</td>
+            <td th:text="${agent.getName()}">name</td>
+            <td th:text="${agent.getAddress()}">address</td>
+            <td th:text="${agent.getStatus()}">status</td>
+            <td th:text="${agent.getRegisterDate()}">register date</td>
+            <td th:text="${agent.getAccountBalance()}">Ballance</td>
+            <td>
+                <a th:href="@{/agent-detail/{agentId}(agentId=${agent.id})}">
+                    <i class="bi bi-eye-fill"></i>
+                </a>
+
+                <!--                <a th:ref="@{/delete-agent/{agentId}(agentId=${agent.getId()})}">-->
+                <!--                    <i class="bi bi-eye-fill"></i>-->
+                <!--                </a>-->
+                <i class="bi bi-trash3"></i>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("searchForm");
+        const targetPageInput = document.getElementById("targetPage");
+        let currentPage = parseInt(targetPageInput.value) || 1;
+        console.log(currentPage);
+
+        // Event handler cho nút Next
+        document.getElementById("nextButton").addEventListener("click", function () {
+            event.preventDefault();
+            targetPageInput.value = currentPage + 1;
+            form.submit();
+        });
+
+        // Event handler cho nút Previous
+        document.getElementById("previousButton").addEventListener("click", function () {
+            if (currentPage > 1) {
+                targetPageInput.value = currentPage - 1;
+                form.submit();
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -28,16 +28,28 @@ public class LoginController {
 
     @PostMapping({"/", "/login"})
     public String login(@Valid @ModelAttribute("accountForm") AccountDto accountDto,
-                        Model model, BindingResult bindingResult) {
-        boolean valid = accountService.verifyAccount(accountDto);
-        if (valid) {
-            model.addAttribute("message", "Log in successful");
+                        BindingResult bindingResult, Model model) {
+        try {
+            if (bindingResult.hasErrors()) {
+                model.addAttribute("message", "Has some input errors");
+                return "login";
+            }
+
+            boolean valid = accountService.verifyAccount(accountDto);
+            if (valid) {
+                model.addAttribute("message", "Log in successful");
 //            return "redirect:/";
-        } else {
-            model.addAttribute("message", "Email or password is not valid");
+            } else {
+                model.addAttribute("message", "Email or password is not valid");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("message", "Got some errors whilre processing");
+            return "login";
         }
         model.addAttribute("accountForm", accountDto);
-            return "login";
+        return "login";
     }
 
 }

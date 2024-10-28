@@ -13,14 +13,14 @@
     <form th:object="${accountForm}" th:action="@{/login}" method="post">
       <p>
         <label for="email" th:for="email"/>Email:
-        <input type="email" name="email" id="email" th:field="${accountForm.email}"/>
+        <input type="email" name="email" id="email" th:field="*{email}"/>
       </p>
-      <p th:errors="${accountForm.email}"></p>
+      <p th:errors="*{email}"></p>
       <p>
         <label for="password" th:for="password"/>Password:
-        <input type="text" name="password" id="password" th:value="${accountForm.password}"/>
+        <input type="text" name="password" id="password" th:value="*{password}"/>
       </p>
-      <p th:errors="${accountForm.password}"></p>
+      <p th:errors="*{password}"></p>
       <p><button type="submit" name="login" class="submit-btn" >Login</button></p>
     </form>
 <!--    <p><a th:href="@{/}">Back to Home</a></p>-->
